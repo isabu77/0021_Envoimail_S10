@@ -76,8 +76,17 @@ function RandomString($lg = 12)
 		$token = RandomString(12);
 		if (sendMail($dest, "Exercice s10 token",  "Le token est " . $token)){
 			$handle = fopen($token, "w");
-			echo 'mail envoyé et fichier '. $token . " créé";
+			echo 'mail envoyé et fichier '. $token . " créé. ";
 			unset($_SESSION["mail"]);
+			fclose($handle);
+			$handle = fopen(".gitignore", "a");
+			if ($handle){
+				//fseek($handle, -1, SEEK_END);
+				fwrite($handle, "\r\n" . $token);
+				fclose($handle);
+				echo 'fichier '. $token . " ajouté dans .gitignore";
+			}
+
 		}
 	}else{
 		$_SESSION["mail"] = 'ok';
