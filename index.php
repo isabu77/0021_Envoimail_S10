@@ -67,24 +67,45 @@ function RandomString($lg = 12)
     return ($randstring);
 }
 
+// DEBUT
 	if (session_status() != PHP_SESSION_ACTIVE){
 		session_start();
 	}
 
+	if(!empty($_GET) && isset($_GET["token"]) && !empty($_GET["token"]) ){
+		$file = file_get_contents('.gitignore', true);
+		if (strstr($file, $_GET["token"]))
+		{
+			// supprimer le fichier token
+			if (file_exists($_GET["token"])){
+				if (unlink($_GET["token"])){
+					echo '<br />Bravo ! le fichier '. $_GET["token"] . " a été supprimé. ";
+
+				}
+			}else{
+				echo "<br />Oup's ! petit pirate ! Ce token est invalide.";
+			}
+			unset($_SESSION["mail"]);
+		}
+
+	}
+
+
 	if(isset($_SESSION['mail']) && strtolower($_SESSION['mail']) == 'ok') {
 		// envoyer un mail
 		$token = RandomString(12);
-		if (sendMail($dest, "Exercice s10 token",  "Le token est " . $token)){
+		$htmlMail = ["html" => '<h1>Bienvenue !</h1><a href="http://localhost/0021_Envoimail_S10/index.php?token='.urlencode($token).'">Cliquez pour supprimer le token</a>'];
+		if (sendMail($dest, "Exercice s10 token",  $htmlMail)){
 			$handle = fopen($token, "w");
-			echo 'mail envoyé et fichier '. $token . " créé. ";
+			echo '<br /> Mail envoyé et fichier '. $token . " créé. ";
 			unset($_SESSION["mail"]);
 			fclose($handle);
 			$handle = fopen(".gitignore", "a");
 			if ($handle){
-				//fseek($handle, -1, SEEK_END);
 				fwrite($handle, "\r\n" . $token);
 				fclose($handle);
-				echo 'fichier '. $token . " ajouté dans .gitignore";
+				echo '<br /> Fichier '. $token . " ajouté dans .gitignore";
+				echo '<br /> Cliquez sur le lien envoyé par mail pour supprimer le token.';
 			}
 
 		}
