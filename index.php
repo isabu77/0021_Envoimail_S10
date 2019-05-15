@@ -73,9 +73,10 @@ function RandomString($lg = 12)
 
 	if(isset($_SESSION['mail']) && strtolower($_SESSION['mail']) == 'ok') {
 		// envoyer un mail
-		//$token = RandomString(12);
-		if (sendMail($dest, "Exercice s10",  "et voilà le mail Surprise ! ")){
-			echo 'mail envoyé';
+		$token = RandomString(12);
+		if (sendMail($dest, "Exercice s10 token",  "Le token est " . $token)){
+			$handle = fopen($token, "w");
+			echo 'mail envoyé et fichier '. $token . " créé";
 			unset($_SESSION["mail"]);
 		}
 	}else{
