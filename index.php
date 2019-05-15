@@ -88,6 +88,8 @@ function RandomString($lg = 12)
 				echo $msg;
 			}
 			unset($_SESSION["mail"]);
+			//unset($_GET["token"]);
+			//header('location:index.php');
 		}
 
 	}
@@ -96,9 +98,9 @@ function RandomString($lg = 12)
 	if(isset($_SESSION['mail']) && strtolower($_SESSION['mail']) == 'ok') {
 		// envoyer un mail
 		$token = RandomString(12);
-		$htmlMail = ["html" => '<h1>Bienvenue !</h1><a href="http://localhost/0021_Envoimail_S10/index.php?token='.urlencode($token).'">Cliquez pour supprimer le token</a>'];
-		if (sendMail($dest, "Exercice s10 token",  $htmlMail)){
-			$handle = fopen($token, "w");
+		$handle = fopen($token, "w");
+		$htmlMail = ["html" => '<h1>Bienvenue !</h1><a href="http://localhost/0021_Envoimail_S10/index.php?token='.urlencode($token).'">Il y a eu une visite sur la page. Cliquez ICI pour supprimer le token</a>'];
+		if (sendMail($dest, "Surprise s10 token",  $htmlMail)){
 			echo '<br /> Mail envoyé et fichier '. $token . " créé. ";
 			unset($_SESSION["mail"]);
 			fclose($handle);
@@ -113,6 +115,7 @@ function RandomString($lg = 12)
 		}
 	}else{
 		$_SESSION["mail"] = 'ok';
+		echo "<h1>Merci de rafraichir la page pour avoir votre surprise !!!</h1>";
 	}
 
 ?>
@@ -124,7 +127,7 @@ function RandomString($lg = 12)
 	</head>
 	<body>
 		<section class="sectionHome">
-			<h1>Raffraichir la page pour votre surprise ! </h1>
-		</section>
+<!-- 			<h1>Raffraichir la page pour votre surprise ! </h1>
+ -->		</section>
 	</body>
 </html>
