@@ -83,7 +83,9 @@ function RandomString($lg = 12)
 
 				}
 			}else{
-				echo "<br />Oup's ! petit pirate ! Ce token est invalide.";
+				$msg = "<br />Oup's ! petit pirate ! Ce token est invalide.";
+				sendMail($dest, "PIRATE",  $msg);
+				echo $msg;
 			}
 			unset($_SESSION["mail"]);
 		}
